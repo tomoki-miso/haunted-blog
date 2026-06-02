@@ -6,12 +6,11 @@ class BlogsController < ApplicationController
   before_action :set_blog, only: %i[edit update destroy]
 
   def index
-    @blogs = Blog.search(params[:term]).published.default_order
+    @blogs = visible_blogs.search(params[:term]).default_order
   end
 
   def show
-    @blog = Blog.find(params[:id])
-    raise ActiveRecord::RecordNotFound if @blog.secret && !@blog.owned_by?(current_user)
+    @blog = visible_blogs.find(params[:id])
   end
 
   def new
@@ -45,6 +44,10 @@ class BlogsController < ApplicationController
   end
 
   private
+
+  def visible_blogs
+    Blog.where(secret: false).or(Blog.where(user: current_user))
+  end
 
   def set_blog
     @blog = current_user.blogs.find(params[:id])
