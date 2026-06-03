@@ -10,7 +10,7 @@ class Blog < ApplicationRecord
   scope :published, -> { where('secret = FALSE') }
 
   scope :search, lambda { |term|
-    escaped_term = sanitize_sql_like(term)
+    escaped_term = sanitize_sql_like(term.to_s)
     keyword = "%#{escaped_term}%"
     where('title LIKE :keyword OR content LIKE :keyword', keyword: keyword)
   }
@@ -19,5 +19,9 @@ class Blog < ApplicationRecord
 
   def owned_by?(target_user)
     user == target_user
+  end
+
+  def self.visible_blogs(user)
+    published.or(where(user: user))
   end
 end

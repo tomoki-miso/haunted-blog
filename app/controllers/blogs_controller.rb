@@ -6,11 +6,11 @@ class BlogsController < ApplicationController
   before_action :set_blog, only: %i[edit update destroy]
 
   def index
-    @blogs = visible_blogs.search(params[:term]).default_order
+    @blogs = Blog.visible_blogs(current_user).search(params[:term]).default_order
   end
 
   def show
-    @blog = visible_blogs.find(params[:id])
+    @blog = Blog.visible_blogs(current_user).find(params[:id])
   end
 
   def new
@@ -44,10 +44,6 @@ class BlogsController < ApplicationController
   end
 
   private
-
-  def visible_blogs
-    Blog.where(secret: false).or(Blog.where(user: current_user))
-  end
 
   def set_blog
     @blog = current_user.blogs.find(params[:id])
