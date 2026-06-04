@@ -21,7 +21,7 @@ class Blog < ApplicationRecord
     user == target_user
   end
 
-  def self.visible_blogs(user)
+  def self.visible(user)
     published.or(where(user: user))
   end
 end

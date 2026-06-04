@@ -6,11 +6,11 @@ class BlogsController < ApplicationController
   before_action :set_blog, only: %i[edit update destroy]
 
   def index
-    @blogs = Blog.visible_blogs(current_user).search(params[:term]).default_order
+    @blogs = Blog.visible(current_user).search(params[:term]).default_order
   end
 
   def show
-    @blog = Blog.visible_blogs(current_user).find(params[:id])
+    @blog = Blog.visible(current_user).find(params[:id])
   end
 
   def new
