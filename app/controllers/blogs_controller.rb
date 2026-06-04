@@ -10,7 +10,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog = Blog.visible(current_user).find(params[:id])
+    @blogs = Blog.search(params[:term]).published.default_order
   end
 
   def new
